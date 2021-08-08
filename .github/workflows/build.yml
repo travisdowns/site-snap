@@ -32,7 +32,6 @@ jobs:
             echo 'Waiting for http server'
             sleep 1
           done
-          sleep 100s
 
 
       # - name: Set up Ruby

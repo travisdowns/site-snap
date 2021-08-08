@@ -11,6 +11,7 @@ const args = yargs(process.argv.slice(process.argv))
 
 const sitePath = args.site;
 const outPath = args.out;
+const hostPort = args.host || 'https://localhost:8080';
 const excludes = (args.excludes || "").split(',').filter(e => e);
 
 console.log('_site  dir : ', sitePath);
