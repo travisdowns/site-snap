@@ -32,6 +32,9 @@ jobs:
             echo 'Waiting for http server'
             sleep 1
           done
+      - name: Take Snapshot
+        run: node snapshot.js
+          
 
 
       # - name: Set up Ruby

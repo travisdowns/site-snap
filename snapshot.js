@@ -40,7 +40,7 @@ for (const f of allFiles) {
                 console.log('Skipping excluded page: ' + suffix);
                 continue;
             }
-            const url = 'http://127.0.0.1:4000/' + suffix;
+            const url = 'http://' + hostPort + '/' + suffix;
             const out = outPath + '/' + suffix + '.png'
             const dir = path.dirname(out);
 
