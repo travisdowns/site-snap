@@ -12,7 +12,8 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: travisdowns/travisdowns.github.io
-          ref: gh_pages
+          ref: gh-pages
+      - run: ls -l    
       - name: Install node
         uses: actions/setup-node@v2
         with:
