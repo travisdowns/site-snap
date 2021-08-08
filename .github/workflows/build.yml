@@ -1,7 +1,6 @@
 name: snapshot
 on:
   push:
-    branches: [ gh_pages ]
 
 jobs:
   build:
