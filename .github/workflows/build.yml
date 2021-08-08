@@ -1,0 +1,50 @@
+name: snapshot
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check out this project
+        uses: actions/checkout@v2
+      - name: Check out target site
+        uses: actions/checkout@v2
+        with:
+          repository: travisdowns/travisdowns.github.io
+          ref: gh-pages
+          path: site
+      - run: |
+          ls -l
+          pwd
+          ls -l ..    
+      - name: Install node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 10.x
+      - run: npm ci
+      - name: "Launch http server"
+        run: |
+          npm i -g http-server
+          http-server site &
+          sleep 1s
+          until nc -z localhost 8080 2>/dev/null; do
+            echo 'Waiting for http server'
+            sleep 1
+          done
+      - name: Take Snapshot
+        run: node snapshot.js --site=./site --out=output --excludes=debug.html
+          
+
+
+      # - name: Set up Ruby
+      #   uses: ruby/setup-ruby@v1
+      #   with:
+      #     ruby-version: 2.7.3
+      #     bundler-cache: true
+      # - name: Build site
+      #   run: bundle exec jekyll build
+      # - name: Install htmlproofer
+      #   run: sudo gem install html-proofer
+      # - name: Run htmlproofer
+      #   run: ./_scripts/check-html.sh
