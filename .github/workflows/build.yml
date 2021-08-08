@@ -24,7 +24,7 @@ jobs:
           node-version: 10.x
       - run: npm ci
       - name: "Launch http server"
-      - run: |
+        run: |
           npm i -g http-server
           http-server site &
           until nc -z localhost 8080 2>/dev/null; do
