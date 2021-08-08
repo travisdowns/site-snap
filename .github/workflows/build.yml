@@ -13,7 +13,7 @@ jobs:
         with:
           repository: travisdowns/travisdowns.github.io
           ref: gh-pages
-          path: ../site
+          path: site
       - run: |
           ls -l
           pwd
