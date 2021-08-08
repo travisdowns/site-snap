@@ -6,13 +6,19 @@ jobs:
   build:
     runs-on: ubuntu-20.04
     steps:
-      - name: Checkout this project
+      - name: Check out this project
         uses: actions/checkout@v2
-      - name: Checkout target site
+      - name: Check out target site
         uses: actions/checkout@v2
         with:
           repository: travisdowns/travisdowns.github.io
-          ref: master
+          ref: gh_pages
+      - name: Install node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 10.x
+      - run: node --version
+
       # - name: Set up Ruby
       #   uses: ruby/setup-ruby@v1
       #   with:
