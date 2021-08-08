@@ -22,8 +22,16 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 10.x
-      - run: node --version
       - run: npm ci
+      - name: "Launch http server"
+      - run: |
+          npm i -g http-server
+          http-server site &
+          until nc -z localhost 8080 2>/dev/null; do
+            printf '.'
+            sleep 1
+          done
+
 
       # - name: Set up Ruby
       #   uses: ruby/setup-ruby@v1
