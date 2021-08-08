@@ -33,7 +33,7 @@ jobs:
             sleep 1
           done
       - name: Take Snapshot
-        run: node snapshot.js
+        run: node snapshot.js --site=./site --out=output --excludes=debug.html
           
 
 
