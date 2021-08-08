@@ -13,12 +13,17 @@ jobs:
         with:
           repository: travisdowns/travisdowns.github.io
           ref: gh-pages
-      - run: ls -l    
+          path: ../site
+      - run: |
+        ls -l
+        pwd
+        ls -l ..    
       - name: Install node
         uses: actions/setup-node@v2
         with:
           node-version: 10.x
       - run: node --version
+      - run: npm ci
 
       # - name: Set up Ruby
       #   uses: ruby/setup-ruby@v1
