@@ -27,10 +27,12 @@ jobs:
         run: |
           npm i -g http-server
           http-server site &
+          sleep 1s
           until nc -z localhost 8080 2>/dev/null; do
-            printf '.'
+            echo 'Waiting for http server'
             sleep 1
           done
+          sleep 100s
 
 
       # - name: Set up Ruby
