@@ -11,12 +11,14 @@ const args = yargs(process.argv.slice(process.argv))
 
 const sitePath = args.site;
 const outPath = args.out;
-const hostPort = args.host || 'https://localhost:8080';
+const hostPort = args.host || 'localhost:8080';
 const excludes = (args.excludes || "").split(',').filter(e => e);
+
 
 console.log('_site  dir : ', sitePath);
 console.log('output  dir: ', outPath);
 console.log('exclude dir: ', excludes);
+console.log('host:port  : ', hostPort);
 
 if (!fs.existsSync(sitePath))
     throw new Error('_site dir does not exist: ' + sitePath);
