@@ -15,9 +15,9 @@ jobs:
           ref: gh-pages
           path: ../site
       - run: |
-        ls -l
-        pwd
-        ls -l ..    
+          ls -l
+          pwd
+          ls -l ..    
       - name: Install node
         uses: actions/setup-node@v2
         with:
