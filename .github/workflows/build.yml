@@ -1,0 +1,27 @@
+name: snapshot
+on:
+  push:
+    branches: [ gh_pages ]
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout this project
+        uses: actions/checkout@v2
+      - name: Checkout target site
+        uses: actions/checkout@v2
+        with:
+          name: travisdowns/travisdowns.github.io
+          ref: master
+      # - name: Set up Ruby
+      #   uses: ruby/setup-ruby@v1
+      #   with:
+      #     ruby-version: 2.7.3
+      #     bundler-cache: true
+      # - name: Build site
+      #   run: bundle exec jekyll build
+      # - name: Install htmlproofer
+      #   run: sudo gem install html-proofer
+      # - name: Run htmlproofer
+      #   run: ./_scripts/check-html.sh
