@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const debuglog = require('util').debuglog('snapshot');
 const fs = require('fs');
 const glob = require('glob');
