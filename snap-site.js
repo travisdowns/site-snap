@@ -17,7 +17,7 @@ const excludes = (args.excludes || "").split(',').filter(e => e);
 
 console.log('_site  dir : ', sitePath);
 console.log('output  dir: ', outPath);
-console.log('exclude dir: ', excludes);
+console.log('excludes   : ', excludes);
 console.log('host:port  : ', hostPort);
 
 if (!fs.existsSync(sitePath))
@@ -27,7 +27,7 @@ allFiles = glob.sync('**/*.html', { cwd: sitePath });
 console.log('Found ' + allFiles.length + " HTML files")
 
 for (const f of allFiles) {
-    // debuglog('Found: ' + f);
+    debuglog('Found: ' + f);
 }
 
 
@@ -50,22 +50,30 @@ for (const f of allFiles) {
             // don't exist
             fs.mkdirSync(dir, { recursive: true })
             
+            let ts = process.hrtime();
             await page.goto(url);
+            let gotots = process.hrtime(ts);
+            ts = process.hrtime();
             await page.screenshot({ path: out, fullPage: true });
+            screeshotts = process.hrtime(ts);
             const size = fs.statSync(out).size;
-            console.log('(' + (size / 1000000).toFixed(2) + ' MB) Captured ' + url + ' to ' + out);
+
+            function tsformat(ts) {
+                let seconds = ts[0] + ts[1] / 1000000000;
+                return seconds.toFixed(2);
+            }
+
+            console.log('(' + (size / 1000000).toFixed(2) + ' MB, goto: '
+                + tsformat(gotots) + ', ss: ' + tsformat(screeshotts) + ') Captured ' + url + ' to ' + out);
         }
     } finally {
         await browser.close();
     }
+    console.log('Snapshot captured successfully');
 })()
-.then(() => {
-    console.log('Success');
-})
 .catch(e => {
     console.error(e);
     process.exitCode = 1;
-})
-;
+});
 
 
