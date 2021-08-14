@@ -16,7 +16,6 @@ const outPath = args.out;
 const hostPort = args.host || 'localhost:8080';
 const excludes = (args.excludes || "").split(',').filter(e => e);
 
-
 console.log('_site  dir : ', sitePath);
 console.log('output  dir: ', outPath);
 console.log('excludes   : ', excludes);
@@ -39,6 +38,7 @@ for (const f of allFiles) {
         const page = await browser.newPage();
         await page.setViewport({ width: 1366, height: 768 });
 
+
         for (const suffix of allFiles) {
             if (excludes.includes(suffix)) {
                 console.log('Skipping excluded page: ' + suffix);
@@ -51,9 +51,10 @@ for (const f of allFiles) {
             // fully mkdir the output directories in case any 
             // don't exist
             fs.mkdirSync(dir, { recursive: true })
-            
+
             let ts = process.hrtime();
             await page.goto(url);
+            height = await page.evaluate(_ => { return document.body.clientHeight });
             let gotots = process.hrtime(ts);
             ts = process.hrtime();
             await page.screenshot({ path: out, fullPage: true });
@@ -65,7 +66,7 @@ for (const f of allFiles) {
                 return seconds.toFixed(2);
             }
 
-            console.log('(' + (size / 1000000).toFixed(2) + ' MB, goto: '
+            console.log('(' + height + ' px, ' + (size / 1000000).toFixed(2) + ' MB, goto: '
                 + tsformat(gotots) + ', ss: ' + tsformat(screeshotts) + ') Captured ' + url + ' to ' + out);
         }
     } finally {
@@ -73,9 +74,9 @@ for (const f of allFiles) {
     }
     console.log('Snapshot captured successfully');
 })()
-.catch(e => {
-    console.error(e);
-    process.exitCode = 1;
-});
+    .catch(e => {
+        console.error(e);
+        process.exitCode = 1;
+    });
 
 
