@@ -14,23 +14,24 @@ const args = yargs(process.argv.slice(process.argv))
 const sitePath = args.site;
 const outPath = args.out;
 const hostPort = args.host || 'localhost:8080';
+const include = args.include || '**/*.html';
 const excludes = (args.excludes || "").split(',').filter(e => e);
 
 console.log('_site  dir : ', sitePath);
 console.log('output  dir: ', outPath);
+console.log('include    : ', include);
 console.log('excludes   : ', excludes);
 console.log('host:port  : ', hostPort);
 
 if (!fs.existsSync(sitePath))
     throw new Error('_site dir does not exist: ' + sitePath);
 
-allFiles = glob.sync('**/*.html', { cwd: sitePath });
+allFiles = glob.sync(include, { cwd: sitePath });
 console.log('Found ' + allFiles.length + " HTML files")
 
 for (const f of allFiles) {
     debuglog('Found: ' + f);
 }
-
 
 (async () => {
     const browser = await puppeteer.launch();
