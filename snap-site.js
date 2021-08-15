@@ -66,7 +66,12 @@ for (const f of allFiles) {
                 return seconds.toFixed(2);
             }
 
-            console.log('(' + height + ' px, ' + (size / 1000000).toFixed(2) + ' MB, goto: '
+            function pad(val, size) { 
+                const str = val + '';
+                return ' '.repeat(Math.max(0, size - str.length)) + str;
+            }
+
+            console.log('(' + pad(height, 6) + ' px, ' + (size / 1000000).toFixed(2) + ' MB, goto: '
                 + tsformat(gotots) + ', ss: ' + tsformat(screeshotts) + ') Captured ' + url + ' to ' + out);
         }
     } finally {
