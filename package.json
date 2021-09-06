@@ -1,6 +1,6 @@
 {
   "name": "snap-site",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "screenshot your website",
   "repository": "github:travisdowns/snap-site",
   "main": "snap-site.js",

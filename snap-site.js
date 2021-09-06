@@ -64,6 +64,12 @@ const args = yargs(process.argv.slice(process.argv))
             type: 'int',
             default: 1200
         })
+    .option('dark',
+        {
+            describe: 'Set prefers-color-scheme to dark',
+            boolean: true,
+            default: false
+        })
     .argv;
 
 const sitePath = args['site-dir'];
@@ -81,6 +87,7 @@ console.log('excludes   : ', excludes.toString());
 console.log('host:port  : ', hostPort);
 console.log('view height: ', viewHeight);
 console.log('view width : ', viewWidth);
+console.log('dark mode  : ', args.dark);
 
 if (!fs.existsSync(sitePath))
     throw new Error('_site dir does not exist: ' + sitePath);
@@ -97,6 +104,10 @@ for (const f of allFiles) {
     try {
         const page = await browser.newPage();
         await page.setViewport({ width: viewWidth, height: viewHeight });
+
+        if (args.dark) {
+            await page.emulateMediaFeatures([{ name: 'prefers-color-scheme', value: 'dark' }]);
+        }
 
         if (allFiles.length) {
             console.log("  Height  Goto Time  Shot Time       Size    Suffix")
