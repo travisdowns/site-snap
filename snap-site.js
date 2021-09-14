@@ -56,7 +56,7 @@ const args = yargs(process.argv.slice(process.argv))
         {
             describe: 'The height of the viewport and the screenshot if the page does not scroll vertically',
             type: 'int',
-            default: 100
+            default: 600
         })
     .option('width',
         {
