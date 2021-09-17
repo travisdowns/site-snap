@@ -13,7 +13,11 @@ const args = yargs(process.argv.slice(process.argv))
         {
             describe: 'The root directory containing the static site files',
             type: 'string',
-            demandOption: true
+        })
+    .option('url',
+        {
+            describe: 'The URL to screenshot',
+            type: 'string',
         })
     .option('out-dir',
         {
@@ -31,7 +35,6 @@ const args = yargs(process.argv.slice(process.argv))
         {
             describe: 'The host and port where the static site is being served, like localhost:8080',
             type: 'string',
-            demandOption: true
         })
     .option('protocol',
         {
@@ -70,6 +73,7 @@ const args = yargs(process.argv.slice(process.argv))
             boolean: true,
             default: false
         })
+    .conflicts('url', ['site-dir', 'host-port'])
     .argv;
 
 const sitePath = args['site-dir'];
@@ -89,14 +93,28 @@ console.log('view height: ', viewHeight);
 console.log('view width : ', viewWidth);
 console.log('dark mode  : ', args.dark);
 
-if (!fs.existsSync(sitePath))
-    throw new Error('_site dir does not exist: ' + sitePath);
+const inputs = [];
 
-allFiles = glob.sync(include, { cwd: sitePath, ignore: excludes });
-console.log('Found ' + allFiles.length + " HTML files")
+if (sitePath) {
+    if (!fs.existsSync(sitePath))
+        throw new Error('_site dir does not exist: ' + sitePath);
 
-for (const f of allFiles) {
-    debuglog('Found: ' + f);
+    const allFiles = glob.sync(include, { cwd: sitePath, ignore: excludes });
+    console.log('Found ' + allFiles.length + " HTML files")
+
+    for (const suffix of allFiles) {
+        debuglog('Found: ' + suffix);
+        if (excludes.includes(suffix)) {
+            console.log('Skipping excluded page: ' + suffix);
+            continue;
+        }
+        const url = args.protocol + '://' + hostPort + '/' + suffix;
+        inputs.push({ suffix, url});
+    }
+} else {
+    const url = args.url;
+    const suffix = url.substring(url.indexOf('/') + 1);
+    inputs.push({ suffix, url});
 }
 
 (async () => {
@@ -109,16 +127,13 @@ for (const f of allFiles) {
             await page.emulateMediaFeatures([{ name: 'prefers-color-scheme', value: 'dark' }]);
         }
 
-        if (allFiles.length) {
+        if (inputs.length) {
             console.log("  Height  Goto Time  Shot Time       Size    Suffix")
         }
-        for (const suffix of allFiles) {
-            if (excludes.includes(suffix)) {
-                console.log('Skipping excluded page: ' + suffix);
-                continue;
-            }
-            const url = args.protocol + '://' + hostPort + '/' + suffix;
-            const out = outPath + '/' + suffix + '.png'
+        for (const input of inputs) {
+            const url = input.url;
+            const suffix = input.suffix;
+            const out = outPath + '/' + suffix + '.png';
             const dir = path.dirname(out);
 
             // fully mkdir the output directories in case any 
