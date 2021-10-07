@@ -31,6 +31,12 @@ const args = yargs(process.argv.slice(process.argv))
             type: 'string',
             demandOption: true
         })
+    .option('headless',
+        {
+            describe: 'Run puppeteer in headful (non-headless) mode',
+            boolean: true,
+            default: true
+        })
     .option('host-port',
         {
             describe: 'The host and port where the static site is being served, like localhost:8080',
@@ -73,6 +79,12 @@ const args = yargs(process.argv.slice(process.argv))
             boolean: true,
             default: false
         })
+    .option('wait',
+        {
+            describe: 'Do not terminate the process but wait for Ctrl-C keeping the browser open',
+            boolean: true,
+            default: false
+        })
     .conflicts('url', ['site-dir', 'host-port'])
     .argv;
 
@@ -92,6 +104,9 @@ console.log('host:port  : ', hostPort);
 console.log('view height: ', viewHeight);
 console.log('view width : ', viewWidth);
 console.log('dark mode  : ', args.dark);
+console.log('headless   : ', args.headless);
+console.log('wait       : ', args.wait);
+
 
 const inputs = [];
 
@@ -118,7 +133,7 @@ if (sitePath) {
 }
 
 (async () => {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({ headless: args.headless });
     try {
         const page = await browser.newPage();
         await page.setViewport({ width: viewWidth, height: viewHeight });
@@ -161,6 +176,12 @@ if (sitePath) {
 
             console.log(`${pad(height)}px    ${tsformat(gotots)}s    ${tsformat(screeshotts)}s` +
                 `  ${pad((size / 1000000).toFixed(2))} MB    ${suffix}`);
+        }
+
+        if (args.wait) {
+            while (true) {
+                await new Promise(r => setTimeout(r, 9999999));
+            }
         }
     } finally {
         await browser.close();
